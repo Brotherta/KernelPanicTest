@@ -55,9 +55,7 @@ class KernelPanic(commands.AutoShardedBot):
             for chan in categorie.text_channels:
                 if chan.name == "general":
                     await chan.send("Salut <@{}> ! :wave:\nVoici ton channel de test, tu peux créer, supprimer et modifier "
-                                    "ce que tu veux ici. N'hésite pas à demander aux Admins de l'aide."
-                                    "\nTu trouveras plus d'informations ici :point_right: "
-                                    "https://discord.com/channels/687978521796411441/810083294543740938".format(member.id))
+                                    "ce que tu veux ici. N'hésite pas à demander aux Admins de l'aide.".format(member.id))
                     break
 
 
