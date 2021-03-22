@@ -69,9 +69,13 @@ class KernelPanic(commands.AutoShardedBot):
                     await category.set_permissions(new_bot, read_messages=True, send_messages=True)
 
     async def on_guild_channel_update(self, before, after):
-        print(before)
-        print("-------------\n\n\n")
-        print(after)
+        guild = before.guild
+        if "'s-env" in before.name:
+            async for entry in guild.audit_logs(limit=1):
+                if entry.action == discord.AuditLogAction.channel_update:
+                    if entry.user.name != self.user.name:
+                        await after.edit(name=before.name)
+
 
     async def on_member_remove(self, member):
         guild = member.guild
