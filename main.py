@@ -7,6 +7,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
+ROLE_PARTICIPANT = os.getenv('ROLE_PARTICIPANT')
+ROLE_PARTICIPANT_BOT = os.getenv('ROLE_PARTICIPANT_BOT')
 
 BUFFER_NAME = {}
 
@@ -20,10 +22,11 @@ class KernelPanic(commands.AutoShardedBot):
     async def on_ready(self):
         print(f'{self.user} has connected to Discord !')
 
+
     async def on_member_join(self, member):
         guild = member.guild
         if not member.bot:
-            role = guild.get_role(823584869162287177)  # Role Participant
+            role = guild.get_role(ROLE_PARTICIPANT)
             await member.add_roles(role)
             overwrites = {
                 guild.default_role: discord.PermissionOverwrite(read_messages=False),
@@ -51,10 +54,10 @@ class KernelPanic(commands.AutoShardedBot):
 
     async def on_message(self, message):
         if message.type == discord.MessageType.new_member and message.author.bot:
-            bot = message.author
+            new_bot = message.author
             guild = message.guild
-            role = guild.get_role(823607310559346688)  # role Bot Concours roles
-            await bot.add_roles(role)
+            role = guild.get_role(ROLE_PARTICIPANT_BOT)  # role Bot Concours roles
+            await new_bot.add_roles(role)
             async for entry in guild.audit_logs(limit=2):
                 if entry.action == discord.AuditLogAction.bot_add:
                     user_name = entry.user.name
@@ -63,8 +66,12 @@ class KernelPanic(commands.AutoShardedBot):
                         if user_name in cat.name:
                             category = cat
                             break
-                    await category.set_permissions(bot, read_messages=True, send_messages=True)
+                    await category.set_permissions(new_bot, read_messages=True, send_messages=True)
 
+    async def on_guild_channel_update(self, before, after):
+        print(before)
+        print("-------------\n\n\n")
+        print(after)
 
     async def on_member_remove(self, member):
         guild = member.guild
