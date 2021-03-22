@@ -60,7 +60,6 @@ class KernelPanic(commands.AutoShardedBot):
                     user_name = entry.user.name
                     category = None
                     for cat in guild.categories:
-                        print(cat.name)
                         if user_name in cat.name:
                             category = cat
                             break
@@ -71,7 +70,6 @@ class KernelPanic(commands.AutoShardedBot):
         guild = member.guild
         category = None
         for cat in guild.categories:
-            print(cat.name)
             if member.name in cat.name:
                 category = cat
                 break
