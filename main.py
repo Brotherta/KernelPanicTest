@@ -26,7 +26,7 @@ class KernelPanic(commands.AutoShardedBot):
     async def on_member_join(self, member):
         guild = member.guild
         if not member.bot:
-            role = guild.get_role(ROLE_PARTICIPANT)
+            role = guild.get_role(int(ROLE_PARTICIPANT))
             await member.add_roles(role)
             overwrites = {
                 guild.default_role: discord.PermissionOverwrite(read_messages=False),
@@ -56,7 +56,7 @@ class KernelPanic(commands.AutoShardedBot):
         if message.type == discord.MessageType.new_member and message.author.bot:
             new_bot = message.author
             guild = message.guild
-            role = guild.get_role(ROLE_PARTICIPANT_BOT)  # role Bot Concours roles
+            role = guild.get_role(int(ROLE_PARTICIPANT_BOT))  # role Bot Concours roles
             await new_bot.add_roles(role)
             async for entry in guild.audit_logs(limit=2):
                 if entry.action == discord.AuditLogAction.bot_add:
@@ -78,15 +78,16 @@ class KernelPanic(commands.AutoShardedBot):
 
 
     async def on_member_remove(self, member):
-        guild = member.guild
-        category = None
-        for cat in guild.categories:
-            if member.name in cat.name:
-                category = cat
-                break
-        for chan in category.channels:
-            await chan.delete()
-        await category.delete()
+        if not member.bot:
+            guild = member.guild
+            category = None
+            for cat in guild.categories:
+                if member.name in cat.name:
+                    category = cat
+                    break
+            for chan in category.channels:
+                await chan.delete()
+            await category.delete()
 
 
 if __name__ == '__main__':
