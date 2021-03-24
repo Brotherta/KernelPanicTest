@@ -33,7 +33,8 @@ class KernelPanic(commands.AutoShardedBot):
                 member: discord.PermissionOverwrite(read_messages=True,
                                                     send_messages=True,
                                                     manage_channels=True,
-                                                    manage_guild=True)
+                                                    manage_guild=True,
+                                                    manage_messages=True)
             }
             chan_name = "{}'s-env".format(member.name)
             await guild.create_category_channel(chan_name, overwrites=overwrites)
