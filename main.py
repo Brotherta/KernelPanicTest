@@ -90,6 +90,14 @@ class KernelPanic(commands.AutoShardedBot):
                 await chan.delete()
             await category.delete()
 
+    async def on_member_update(self, before: discord.Member, after: discord.Member):
+        if not after.bot:
+            if before.display_name != after.display_name:
+                old_env_name = f"{before.display_name}'s-env"
+                new_env_name = f"{after.display_name}'s-env"
+                for c in after.guild.categories:
+                    if c.name == old_env_name:
+                        return await c.edit(name=new_env_name, reason="Changement de nom.")
 
 if __name__ == '__main__':
     bot = KernelPanic()
