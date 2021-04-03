@@ -3,8 +3,8 @@ import os
 import discord
 
 from discord.ext import commands
-from dotenv import load_dotenv
 
+from dotenv import load_dotenv
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 ROLE_PARTICIPANT = os.getenv('ROLE_PARTICIPANT')
@@ -90,14 +90,30 @@ class KernelPanic(commands.AutoShardedBot):
                 await chan.delete()
             await category.delete()
 
-    async def on_member_update(self, before: discord.Member, after: discord.Member):
-        if not after.bot:
-            if before.display_name != after.display_name:
-                old_env_name = f"{before.display_name}'s-env"
-                new_env_name = f"{after.display_name}'s-env"
-                for c in after.guild.categories:
-                    if c.name == old_env_name:
-                        return await c.edit(name=new_env_name, reason="Changement de nom.")
+    async def on_user_update(self,before,after):
+        if not before.bot:
+            if before.name != after.name:
+                guilds = after.mutual_guilds
+                # print(guilds)
+                guild = None
+                for g in guilds:
+                    if g.id == 747824621486866612:  #id de Kernel Panic Test = 810082514685263883
+                        guild = g
+                # print(guild)
+                old_chan_name = "{}'s-env".format(before.name)
+                new_chan_name = "{}'s-env".format(after.name)
+                # print("changement de",old_chan_name,"à",new_chan_name)
+                for cat in guild.categories:
+                    # print(cat)
+                    if cat.name == old_chan_name:
+                        # print("dans la catégorie :",cat)
+                        await cat.edit(name=new_chan_name)
+                        # print("changement fait, la catégorie est :", cat)
+                        break
+
+
+
+
 
 if __name__ == '__main__':
     bot = KernelPanic()
