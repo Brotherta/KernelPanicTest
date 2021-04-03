@@ -9,6 +9,7 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 ROLE_PARTICIPANT = os.getenv('ROLE_PARTICIPANT')
 ROLE_PARTICIPANT_BOT = os.getenv('ROLE_PARTICIPANT_BOT')
+ID_KernelServ = os.getenv('ID_KernelServ')
 
 BUFFER_NAME = {}
 
@@ -97,6 +98,24 @@ class KernelPanic(commands.AutoShardedBot):
                 for c in after.guild.categories:
                     if c.name == old_env_name:
                         return await c.edit(name=new_env_name, reason="Changement de nom.")
+
+
+    async def on_user_update(self,before,after):
+        if not before.bot:
+            if before.name != after.name:
+                guilds = after.mutual_guilds
+                
+                guild = None
+                for g in guilds:
+                    if g.id == ID_KernelServ:
+                        guild = g
+                old_chan_name = "{}'s-env".format(before.name)
+                new_chan_name = "{}'s-env".format(after.name)
+                
+                for cat in guild.categories:
+                    if cat.name == old_chan_name:                       
+                        await cat.edit(name=new_chan_name)
+                        break
 
 if __name__ == '__main__':
     bot = KernelPanic()
